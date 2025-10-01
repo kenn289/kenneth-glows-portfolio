@@ -7,7 +7,7 @@ const education = [
     degree: "B.E. in Information Science",
     period: "Dec. 2021 – 2025",
     location: "Bangalore, Karnataka",
-    grade: "7th sem SGPA 8.83, CGPA 8.17",
+    grade: "CGPA 8.36",
     color: "primary",
   },
   {
