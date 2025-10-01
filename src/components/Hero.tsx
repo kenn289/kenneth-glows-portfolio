@@ -73,7 +73,7 @@ export const Hero = () => {
                 className="group"
                 asChild
               >
-                <a href="/KENNETH_OSWIN.pdf" download>
+                <a href="/KENNETH_OSWIN.pdf" download="Kenneth_Oswin_Resume.pdf" target="_blank" rel="noopener noreferrer">
                   <Download className="mr-2 h-4 w-4 group-hover:animate-bounce" />
                   View Resume
                 </a>

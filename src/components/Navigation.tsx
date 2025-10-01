@@ -8,9 +8,9 @@ import { useNavigate } from "react-router-dom";
 const socialLinks = [
   { icon: Github, href: "/github-stars", label: "GitHub", internal: true },
   { icon: Linkedin, href: "https://linkedin.com/in/kenneth-oswin-206100236/", label: "LinkedIn" },
-  { icon: Youtube, href: "https://youtube.com/@kennethoswin", label: "YouTube" },
-  { icon: Instagram, href: "https://instagram.com/kennethoswin", label: "Instagram" },
-  { icon: Code2, href: "https://leetcode.com/u/kenn289/", label: "LeetCode" },
+  { icon: Youtube, href: "https://www.youtube.com/@chickensquad4948", label: "YouTube" },
+  { icon: Instagram, href: "https://instagram.com/kenn._.ethh", label: "Instagram" },
+  { icon: Code2, href: "https://leetcode.com/u/kenn_289/", label: "LeetCode" },
 ];
 
 export const Navigation = () => {
