@@ -15,7 +15,6 @@ export const Hobbies = () => {
 
   const riotName = "Chicken Tikka";
   const riotTag = "Kboy";
-  const region = "ap";
 
   useEffect(() => {
     const controller = new AbortController();
@@ -24,44 +23,41 @@ export const Hobbies = () => {
       try {
         setLoading(true);
 
-        // ✅ Call your Vercel proxy route (no API key exposed)
-        const url = `/api/valorant-mmr?region=${encodeURIComponent(
-          region
-        )}&name=${encodeURIComponent(riotName)}&tag=${encodeURIComponent(
-          riotTag
-        )}`;
+        const url = `/api/valorant-tracker?name=${encodeURIComponent(
+          riotName
+        )}&tag=${encodeURIComponent(riotTag)}`;
 
         const res = await fetch(url, { signal: controller.signal });
         if (!res.ok) throw new Error(`Proxy request failed: ${res.status}`);
 
         const json = await res.json();
-        const data = json?.data ?? {};
-        const current = data?.current_data ?? data;
-        const highest = data?.highest_rank ?? data?.highest ?? {};
+
+        // Tracker.gg stores rank in segments[0].stats
+        const segments = json.data?.segments || [];
+        const competitiveSegment = segments.find((s: any) => s.type === "competitive");
 
         const currentRank =
-          current?.currenttierpatched || current?.tier || current?.currenttier || "Unknown";
-
+          competitiveSegment?.stats?.rank?.metadata?.name || "Unknown";
         const rrPoints =
-          typeof current?.ranking_in_tier === "number"
-            ? `${current.ranking_in_tier} RR`
-            : current?.rr || undefined;
-
+          competitiveSegment?.stats?.rankedRating?.value
+            ? `${competitiveSegment.stats.rankedRating.value} RR`
+            : undefined;
         const peak =
-          highest?.patched_tier || highest?.tier || current?.currenttierpatched || undefined;
+          competitiveSegment?.stats?.peakRank?.metadata?.name || currentRank;
 
-        setValorantStats({ rank: currentRank, rr: rrPoints, peakRank: peak });
+        // Override display as requested
+        setValorantStats({ rank: "Gold 2", rr: rrPoints, peakRank: "Platinum 1" });
         setLastUpdated(new Date());
         setLoading(false);
       } catch (error) {
         console.error("Valorant fetch error:", error);
-        setValorantStats({ rank: "Unavailable" });
+        // Fallback to requested display values
+        setValorantStats({ rank: "Gold 2", peakRank: "Platinum 1" });
         setLoading(false);
       }
     }
 
     fetchValorantMMR();
-
     const interval = setInterval(fetchValorantMMR, 1000 * 60 * 2);
     window.addEventListener("valorant-refresh", fetchValorantMMR);
 
@@ -132,26 +128,34 @@ export const Hobbies = () => {
 
                   <div className="flex-1">
                     <h3 className="text-2xl font-bold mb-2">{hobby.title}</h3>
-                    <p className="text-muted-foreground mb-3">
-                      {hobby.description}
-                    </p>
+                    <p className="text-muted-foreground mb-3">{hobby.description}</p>
                     {hobby.details && (
-                      <p className="text-sm text-primary font-mono">
-                        {hobby.details}
-                      </p>
+                      <p className="text-sm text-primary font-mono">{hobby.details}</p>
                     )}
 
                     {hobby.stats && !loading && (
                       <div className="mt-4 flex gap-4 flex-wrap">
                         <div className="bg-surface/50 px-3 py-2 rounded-lg">
                           <p className="text-xs text-muted-foreground">Current</p>
-                          <p className="font-bold text-accent">
+                          <p
+                            className={`font-bold ${
+                              (hobby.stats.rank || "").toLowerCase().includes("gold")
+                                ? "text-yellow-400"
+                                : "text-accent"
+                            }`}
+                          >
                             {hobby.stats.rank} {hobby.stats.rr}
                           </p>
                         </div>
                         <div className="bg-surface/50 px-3 py-2 rounded-lg">
                           <p className="text-xs text-muted-foreground">Peak</p>
-                          <p className="font-bold text-accent-secondary">
+                          <p
+                            className={`font-bold ${
+                              (hobby.stats.peakRank || "").toLowerCase().includes("platinum")
+                                ? "text-slate-300"
+                                : "text-accent-secondary"
+                            }`}
+                          >
                             {hobby.stats.peakRank}
                           </p>
                         </div>
