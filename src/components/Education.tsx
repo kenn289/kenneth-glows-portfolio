@@ -30,7 +30,7 @@ const education = [
 
 export const Education = () => {
   return (
-    <section id="education" className="py-20 px-4 bg-surface">
+    <section id="education" className="py-20 px-4">
       <div className="container mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -56,7 +56,7 @@ export const Education = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               whileHover={{ scale: 1.02 }}
-              className="bg-card border border-border rounded-2xl p-6 hover:shadow-glow-cyan transition-all duration-300"
+              className="bg-card border border-border rounded-2xl p-6 hover:shadow-glow-purple transition-all duration-300"
             >
               <div className="flex items-start gap-4">
                 <div className="p-3 rounded-xl bg-primary/10 text-primary">
@@ -107,7 +107,7 @@ export const Education = () => {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
                 whileHover={{ scale: 1.1, y: -2 }}
-                className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium border border-border hover:border-primary transition-colors cursor-default"
+                className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium border border-border hover:border-purple-500 transition-colors cursor-default"
               >
                 {course}
               </motion.span>

@@ -74,14 +74,14 @@ export const Projects = () => {
               }}
               className="w-full"
             >
-              <CarouselContent>
+              <CarouselContent className="pt-3">
                 {repos.map((repo) => (
-                  <CarouselItem key={repo.id} className="md:basis-1/2 lg:basis-1/3">
+                  <CarouselItem key={repo.id} className="md:basis-1/2 lg:basis-1/3 pt-3">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      whileHover={{ y: -8 }}
+                      whileHover={{ y: -6 }}
                       className="group bg-card border border-border rounded-2xl p-6 hover:shadow-glow-purple transition-all duration-300 h-full"
                     >
                       <div className="mb-4">

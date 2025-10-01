@@ -1,12 +1,20 @@
 import { motion } from "framer-motion";
-import { Camera, Instagram } from "lucide-react";
-import { Button } from "./ui/button";
+import { Camera } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./ui/carousel";
+import { useMemo } from "react";
+// Dynamically import all images except the profile
+const allImages = import.meta.glob("@/assets/*.{png,jpg,jpeg,webp}", { eager: true, import: "default" }) as Record<string, string>;
 
 export const Photography = () => {
-  const instagramHandle = "kenn._.ethh";
+  const photos = useMemo(() => {
+    return Object.entries(allImages)
+      .filter(([path]) => !/kenneth-profile\.jpg$/i.test(path))
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([, src]) => src);
+  }, []);
 
   return (
-    <section id="photography" className="py-20 px-4 bg-surface">
+    <section id="photography" className="py-20 px-4">
       <div className="container mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -33,59 +41,32 @@ export const Photography = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="max-w-3xl mx-auto"
         >
-          <div className="bg-card border border-border rounded-2xl p-8 text-center hover:shadow-glow-cyan transition-all duration-300">
-            <div className="mb-6">
-              <div className="inline-block p-4 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 mb-4">
-                <Instagram className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold mb-2">Check Out My Work</h3>
-              <p className="text-muted-foreground mb-1">
-                I share my photography journey on Instagram
-              </p>
-              <p className="text-primary font-mono text-lg">
-                @{instagramHandle}
-              </p>
+          <div className="bg-card border border-border rounded-2xl p-8 text-center hover:shadow-glow-purple transition-all duration-300">
+            <h3 className="text-2xl font-bold mb-6">Photography Slideshow</h3>
+            <div className="relative max-w-4xl mx-auto">
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {photos.map((src, idx) => (
+                    <CarouselItem key={idx} className="flex items-center justify-center p-2">
+                      <div className="w-full flex items-center justify-center">
+                        <img
+                          src={src}
+                          alt={`photo-${idx + 1}`}
+                          className="max-h-[70vh] md:max-h-[75vh] w-auto object-contain rounded-xl border border-border"
+                          loading="lazy"
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-2 md:-left-4 hover:bg-purple-100 dark:hover:bg-purple-900/30" />
+                <CarouselNext className="right-2 md:-right-4 hover:bg-purple-100 dark:hover:bg-purple-900/30" />
+              </Carousel>
             </div>
-
-            <Button
-              asChild
-              size="lg"
-              className="bg-gradient-to-r from-primary to-accent-secondary hover:opacity-90 transition-opacity"
-            >
-              <a
-                href={`https://instagram.com/${instagramHandle}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="gap-2"
-              >
-                <Instagram className="h-5 w-5" />
-                View on Instagram
-              </a>
-            </Button>
+            <p className="text-muted-foreground text-sm mt-4">More photos coming soon.</p>
           </div>
 
-          {/* Optional: Add a grid placeholder for featured photos */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-4"
-          >
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div
-                key={i}
-                className="aspect-square rounded-xl bg-gradient-to-br from-primary/20 to-accent-secondary/20 border border-border hover:border-primary transition-colors cursor-pointer group overflow-hidden"
-              >
-                <div className="w-full h-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Camera className="h-8 w-8 text-muted-foreground/50" />
-                </div>
-              </div>
-            ))}
-          </motion.div>
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            Featured shots coming soon — follow me for updates!
-          </p>
+          
         </motion.div>
       </div>
     </section>

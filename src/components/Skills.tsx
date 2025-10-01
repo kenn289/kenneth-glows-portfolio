@@ -24,7 +24,7 @@ const skillCategories = [
 
 export const Skills = () => {
   return (
-    <section id="skills" className="py-20 px-4 bg-surface">
+    <section id="skills" className="py-20 px-4">
       <div className="container mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -49,7 +49,7 @@ export const Skills = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
-              className="bg-card border border-border rounded-2xl p-6 hover:shadow-glow-cyan transition-shadow duration-300"
+              className="bg-card border border-border rounded-2xl p-6 hover:shadow-glow-purple transition-shadow duration-300"
             >
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 rounded-xl bg-primary/10 text-primary">
@@ -67,7 +67,7 @@ export const Skills = () => {
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.05 }}
                     whileHover={{ scale: 1.1, y: -2 }}
-                    className="px-3 py-1.5 bg-secondary text-secondary-foreground rounded-lg text-sm font-medium border border-border hover:border-primary transition-colors cursor-default"
+                    className="px-3 py-1.5 bg-secondary text-secondary-foreground rounded-lg text-sm font-medium border border-border hover:border-purple-500 transition-colors cursor-default"
                   >
                     {skill}
                   </motion.span>

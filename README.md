@@ -71,3 +71,13 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Environment variables
+
+Create a `.env.local` file in the project root and add:
+
+```
+VITE_HENRIK_API_KEY=your_api_key_here
+```
+
+Restart the dev server after adding or changing environment variables.

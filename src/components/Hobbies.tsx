@@ -11,19 +11,88 @@ interface ValorantStats {
 export const Hobbies = () => {
   const [valorantStats, setValorantStats] = useState<ValorantStats>({});
   const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+
+  const riotName = "Chicken Tikka";
+  const riotTag = "Kboy";
 
   useEffect(() => {
-    // Simulating Valorant stats - in production you'd fetch from Valorant API
-    // Note: Valorant doesn't have a public API, so these would need to be manually updated
-    // or scraped from tracker.gg
-    setTimeout(() => {
-      setValorantStats({
-        rank: "Your Rank",
-        rr: "RR Points",
-        peakRank: "Peak Rank"
-      });
-      setLoading(false);
-    }, 1000);
+    const controller = new AbortController();
+    const region = "ap";
+
+    async function fetchValorantMMR() {
+      try {
+        setLoading(true);
+
+        const apiKey = import.meta.env.VITE_HENRIK_API_KEY as string | undefined;
+
+        // Direct call to Henrik with API key headers
+        const urlV2 = `https://api.henrikdev.xyz/valorant/v2/mmr/${encodeURIComponent(region)}/${encodeURIComponent(
+          riotName,
+        )}/${encodeURIComponent(riotTag)}`;
+        let res = await fetch(urlV2, {
+          headers: apiKey
+            ? {
+                Authorization: apiKey.startsWith("Bearer ") ? apiKey : `Bearer ${apiKey}`,
+                "X-API-Key": apiKey,
+              }
+            : undefined,
+          signal: controller.signal,
+        });
+
+        if (!res.ok) {
+          const urlV1 = `https://api.henrikdev.xyz/valorant/v1/mmr/${encodeURIComponent(region)}/${encodeURIComponent(
+            riotName,
+          )}/${encodeURIComponent(riotTag)}`;
+          res = await fetch(urlV1, {
+            headers: apiKey
+              ? {
+                  Authorization: apiKey.startsWith("Bearer ") ? apiKey : `Bearer ${apiKey}`,
+                  "X-API-Key": apiKey,
+                }
+              : undefined,
+            signal: controller.signal,
+          });
+        }
+
+        if (!res.ok) throw new Error(`MMR request failed: ${res.status}`);
+
+        const json = await res.json();
+        const data = json?.data ?? {};
+        const current = data?.current_data ?? data;
+        const highest = data?.highest_rank ?? data?.highest ?? {};
+
+        const currentRank =
+          current?.currenttierpatched || current?.tier || current?.currenttier || "Unknown";
+
+        const rrPoints =
+          typeof current?.ranking_in_tier === "number"
+            ? `${current.ranking_in_tier} RR`
+            : current?.rr || undefined;
+
+        const peak =
+          highest?.patched_tier || highest?.tier || current?.currenttierpatched || undefined;
+
+        setValorantStats({ rank: currentRank, rr: rrPoints, peakRank: peak });
+        setLastUpdated(new Date());
+        setLoading(false);
+      } catch (error) {
+        console.error("Valorant fetch error:", error);
+        setValorantStats({ rank: "Unavailable" });
+        setLoading(false);
+      }
+    }
+
+    fetchValorantMMR();
+
+    const interval = setInterval(fetchValorantMMR, 1000 * 60 * 2);
+    window.addEventListener("valorant-refresh", fetchValorantMMR);
+
+    return () => {
+      controller.abort();
+      clearInterval(interval);
+      window.removeEventListener("valorant-refresh", fetchValorantMMR);
+    };
   }, []);
 
   const hobbies = [
@@ -31,7 +100,7 @@ export const Hobbies = () => {
       title: "Valorant Competitive",
       description: "Grinding ranks and perfecting aim",
       icon: Award,
-      details: "Tracker: Chicken Tikka #Kboy",
+      details: `Tracker: ${riotName}#${riotTag}`,
       color: "from-red-500 to-pink-500",
       stats: valorantStats,
     },
@@ -44,7 +113,10 @@ export const Hobbies = () => {
   ];
 
   return (
-    <section id="hobbies" className="py-20 px-4 bg-background">
+    <section
+      id="hobbies"
+      className="py-20 px-4 bg-gradient-to-br from-purple-500/15 via-purple-500/5 to-purple-500/15"
+    >
       <div className="container mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -91,21 +163,43 @@ export const Hobbies = () => {
                         {hobby.details}
                       </p>
                     )}
-                    
+
                     {hobby.stats && !loading && (
                       <div className="mt-4 flex gap-4 flex-wrap">
                         <div className="bg-surface/50 px-3 py-2 rounded-lg">
                           <p className="text-xs text-muted-foreground">Current</p>
-                          <p className="font-bold text-accent">{hobby.stats.rank}</p>
+                          <p className="font-bold text-accent">
+                            {hobby.stats.rank} {hobby.stats.rr}
+                          </p>
                         </div>
                         <div className="bg-surface/50 px-3 py-2 rounded-lg">
                           <p className="text-xs text-muted-foreground">Peak</p>
-                          <p className="font-bold text-accent-secondary">{hobby.stats.peakRank}</p>
+                          <p className="font-bold text-accent-secondary">
+                            {hobby.stats.peakRank}
+                          </p>
                         </div>
+                        {lastUpdated && (
+                          <div className="px-3 py-2 rounded-lg text-xs text-muted-foreground">
+                            Updated {lastUpdated.toLocaleTimeString()}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
                 </div>
+                {index === 0 && (
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      onClick={() => {
+                        setLoading(true);
+                        window.dispatchEvent(new Event("valorant-refresh"));
+                      }}
+                      className="text-xs px-3 py-1 rounded-md border border-border hover:bg-purple-100 dark:hover:bg-purple-900/30"
+                    >
+                      Refresh
+                    </button>
+                  </div>
+                )}
               </motion.div>
             );
           })}
