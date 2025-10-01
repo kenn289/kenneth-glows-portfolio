@@ -15,47 +15,24 @@ export const Hobbies = () => {
 
   const riotName = "Chicken Tikka";
   const riotTag = "Kboy";
+  const region = "ap";
 
   useEffect(() => {
     const controller = new AbortController();
-    const region = "ap";
 
     async function fetchValorantMMR() {
       try {
         setLoading(true);
 
-        const apiKey = import.meta.env.VITE_HENRIK_API_KEY as string | undefined;
+        // ✅ Call your Vercel proxy route (no API key exposed)
+        const url = `/api/valorant-mmr?region=${encodeURIComponent(
+          region
+        )}&name=${encodeURIComponent(riotName)}&tag=${encodeURIComponent(
+          riotTag
+        )}`;
 
-        // Direct call to Henrik with API key headers
-        const urlV2 = `https://api.henrikdev.xyz/valorant/v2/mmr/${encodeURIComponent(region)}/${encodeURIComponent(
-          riotName,
-        )}/${encodeURIComponent(riotTag)}`;
-        let res = await fetch(urlV2, {
-          headers: apiKey
-            ? {
-                Authorization: apiKey.startsWith("Bearer ") ? apiKey : `Bearer ${apiKey}`,
-                "X-API-Key": apiKey,
-              }
-            : undefined,
-          signal: controller.signal,
-        });
-
-        if (!res.ok) {
-          const urlV1 = `https://api.henrikdev.xyz/valorant/v1/mmr/${encodeURIComponent(region)}/${encodeURIComponent(
-            riotName,
-          )}/${encodeURIComponent(riotTag)}`;
-          res = await fetch(urlV1, {
-            headers: apiKey
-              ? {
-                  Authorization: apiKey.startsWith("Bearer ") ? apiKey : `Bearer ${apiKey}`,
-                  "X-API-Key": apiKey,
-                }
-              : undefined,
-            signal: controller.signal,
-          });
-        }
-
-        if (!res.ok) throw new Error(`MMR request failed: ${res.status}`);
+        const res = await fetch(url, { signal: controller.signal });
+        if (!res.ok) throw new Error(`Proxy request failed: ${res.status}`);
 
         const json = await res.json();
         const data = json?.data ?? {};
