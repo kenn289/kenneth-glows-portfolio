@@ -9,7 +9,7 @@ const skillCategories = [
     color: "primary",
   },
   {
-    title: "Testing & Automation",
+    title: "Automation & Frameworks",
     icon: Wrench,
     skills: ["Robot Framework", "Playwright", "Selenium", "Jenkins", "Jira"],
     color: "accent",

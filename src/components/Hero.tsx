@@ -29,7 +29,7 @@ export const Hero = () => {
               className="inline-block"
             >
               <span className="text-sm font-medium px-4 py-2 rounded-full bg-primary/10 text-primary border border-primary/20">
-                Associate SDET
+                Software Engineer
               </span>
             </motion.div>
 
@@ -49,7 +49,7 @@ export const Hero = () => {
               transition={{ delay: 0.4 }}
               className="text-xl md:text-2xl text-muted-foreground"
             >
-              Associate SDET → automation + testing nerd.
+              Software Engineer → automation + backend + AI.
             </motion.p>
 
             <motion.p
@@ -58,8 +58,8 @@ export const Hero = () => {
               transition={{ delay: 0.5 }}
               className="text-lg text-muted-foreground max-w-xl"
             >
-              Building robust test automation with Playwright, Robot Framework, and Python. 
-              Passionate about quality, efficiency, and breaking things before users do.
+              Building reusable Python, backend, and automation systems with Playwright, Robot Framework, and Flask.
+              Passionate about scalable engineering, AI tooling, and shipping reliable systems.
             </motion.p>
 
             <motion.div
@@ -68,14 +68,17 @@ export const Hero = () => {
               transition={{ delay: 0.6 }}
               className="flex flex-wrap gap-4"
             >
-              <Button
-                size="lg"
-                className="group"
-                asChild
-              >
-                <a href="/KENNETH_OSWIN.pdf" download="Kenneth_Oswin_Resume.pdf" target="_blank" rel="noopener noreferrer">
+              <Button size="lg" className="group" asChild>
+                <a href="/KennethOswinSE.pdf" download="KennethOswinSE.pdf" target="_blank" rel="noopener noreferrer">
                   <Download className="mr-2 h-4 w-4 group-hover:animate-bounce" />
-                  View Resume
+                  Resume - Software Engineer
+                </a>
+              </Button>
+
+              <Button size="lg" variant="outline" className="group" asChild>
+                <a href="/KennethOswinMS.pdf" download="KennethOswinMS.pdf" target="_blank" rel="noopener noreferrer">
+                  <Download className="mr-2 h-4 w-4 group-hover:animate-bounce" />
+                  Educational Resume
                 </a>
               </Button>
 

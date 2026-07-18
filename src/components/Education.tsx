@@ -93,7 +93,7 @@ export const Education = () => {
             {[
               "Data Structures",
               "Machine Learning",
-              "Software Testing",
+              "Software Engineering",
               "DBMS",
               "Data Science",
               "Algorithms Analysis",

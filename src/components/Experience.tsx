@@ -8,20 +8,20 @@ const experiences = [
     period: "Jul 2025 — Present",
     current: true,
     responsibilities: [
-      "Leading test automation initiatives using Robot Framework and Python",
-      "Implementing CI/CD pipelines with Jenkins for continuous testing",
-      "Mentoring team members on best practices in test automation",
+      "Designing and maintaining Python-based engineering frameworks across multiple enterprise products",
+      "Building a Robot Framework library from scratch for an unreleased hardware product with reusable abstractions",
+      "Engineering CI/CD pipelines with Jenkins and Docker to run suites continuously across multiple systems",
     ],
   },
   {
     company: "Crestron",
-    role: "QA Automation Intern",
+    role: "Automation Intern",
     period: "Jan 2025 — Jun 2025",
     current: false,
     responsibilities: [
-      "Developed automation scripts using Robot Framework and Python",
-      "Automated test cases and integrated with Jenkins",
-      "Collaborated with dev team to enhance test coverage and product reliability",
+      "Developed reusable automation and engineering scripts using Robot Framework and Python",
+      "Automated validation workflows and integrated with Jenkins",
+      "Collaborated with dev team to improve automation coverage and product reliability",
     ],
   },
 ];
@@ -41,7 +41,7 @@ export const Experience = () => {
             Experience
           </h2>
           <p className="text-muted-foreground text-lg">
-            My professional journey in test automation
+            My professional journey in software engineering and automation
           </p>
         </motion.div>
 
